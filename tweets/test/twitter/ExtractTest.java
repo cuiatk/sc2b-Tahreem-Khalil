@@ -13,7 +13,6 @@ import java.util.HashSet;
 import java.util.OptionalLong;
 import java.util.Set;
 
-import org.eclipse.jdt.annotation.Nullable;
 import org.junit.Test;
 
 public class ExtractTest {
