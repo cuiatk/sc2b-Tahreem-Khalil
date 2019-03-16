@@ -20,6 +20,20 @@ public class ExtractTest {
 
     /*
      * TODO: your testing strategies for these methods should go here.
+     * 
+     * testing strategy for getTimespan and getMentionedUsers
+     * 
+     * partition space for getTimeSpan
+     * check if the list is empty if not empty then,
+     * check if instant d1 is the starting point
+     * check if instant d3 is the ending point
+     * 
+     * partition for getMentionedUsers
+     * check if tweet list is empty if not empty then,
+     * check if tweets are null
+     * check if tweet has mention once
+     * check if any tweet has mentions twice
+     * 
      * See the ic03-testing exercise for examples of what a testing strategy comment looks like.
      * Make sure you have partitions.
      */
@@ -39,12 +53,16 @@ public class ExtractTest {
         assert false; // make sure assertions are enabled with VM argument: -ea
     }
     
+    /*
+     * checking if list is empty, and also asserting instants time
+     */
+    
     @Test
     public void testGetTimespanTwoTweets() {
-        Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1,tweet2));
+        Timespan timespan = Extract.getTimespan(Arrays.asList(tweet1,tweet2,tweet3));
         
         assertEquals("expected start", d1, timespan.getStart());
-        assertEquals("expected end", d2, timespan.getEnd());
+        assertEquals("expected end", d3, timespan.getEnd());
         
         assertFalse("not expected empty tweets list",Arrays.asList(timespan).isEmpty());
        
@@ -57,6 +75,10 @@ public class ExtractTest {
         assertNotNull("instance 2 is null", d2);
     }
     
+    /*
+     * checking if list is empty
+     */
+    
     @Test
     public void testGetMentionedUsersNoMention() {
         Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet1,tweet2,tweet3));
@@ -67,6 +89,10 @@ public class ExtractTest {
         assertNotNull("tweet 2 is null", tweet2);
         
     }
+    
+    /*
+     * checking if tweet has one mention
+     */
     @Test
     public void testGetMentionedUsersOneMentionTweet() {         
         Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet2));
@@ -76,6 +102,10 @@ public class ExtractTest {
         }
         assertTrue(mentionedUsersLowerCase.contains("rivest"));
     }
+    
+    /*
+     * checking if tweet has two mentions
+     */
     @Test
     public void testGetMentionedUsersTwoMentionTweet() {         
         Set<String> mentionedUsers = Extract.getMentionedUsers(Arrays.asList(tweet3));

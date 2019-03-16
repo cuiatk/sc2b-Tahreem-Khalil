@@ -123,7 +123,7 @@ public class Extract {
        
        for (String text : mention) 
        {
-            System.out.println("mentions in list = " + text);
+            System.out.println("mentions in Tweet = " + text);
        } 
    	
          return (Set<String>) mention;
