@@ -57,6 +57,8 @@ public class Main {
         final Timespan span = Extract.getTimespan(tweets);
         System.err.println("ranging from " + span.getStart() + " to " + span.getEnd());
         
+        System.out.println();
+        
         final Set<String> mentionedUsers = Extract.getMentionedUsers(tweets);
         System.err.println("covers " + mentionedUsers.size() + " Twitter users");
         
