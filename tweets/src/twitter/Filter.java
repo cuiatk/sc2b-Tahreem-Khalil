@@ -3,7 +3,12 @@
  */
 package twitter;
 
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Filter consists of methods that filter a list of tweets for those matching a
@@ -27,7 +32,27 @@ public class Filter {
      *         in the same order as in the input list.
      */
     public static List<Tweet> writtenBy(List<Tweet> tweets, String username) {
-        throw new RuntimeException("not implemented");
+    	
+    	List<Tweet> tweetWrittenBy = new ArrayList<>();
+    	 	
+         if(tweets.isEmpty())
+         {
+      	   System.out.println("list is empty");
+         }
+         else
+         {
+        	 for (Tweet tweet : tweets) 
+        	 {
+        		 if (tweet.getAuthor().toLowerCase().equals(username.toLowerCase()))
+        		 {
+                    System.out.println(tweetWrittenBy.add(tweet)+" written by"); 
+                 }
+			 }
+         	
+         }
+ 	 
+    	return   tweetWrittenBy;
+       // throw new RuntimeException("not implemented");
     }
 
     /**
@@ -40,8 +65,41 @@ public class Filter {
      * @return all and only the tweets in the list that were sent during the timespan,
      *         in the same order as in the input list.
      */
-    public static List<Tweet> inTimespan(List<Tweet> tweets, Timespan timespan) {
-        throw new RuntimeException("not implemented");
+    @SuppressWarnings("unused")
+	public static List<Tweet> inTimespan(List<Tweet> tweets, Timespan timespan) {
+    	
+    	
+    	List<Tweet> tweetWrittenByTimespan = new ArrayList<>();
+    	Timespan timeSpan = null;
+    	Instant startingPointInstant = null;
+    	Instant endingPointInstant = null;
+    	
+			//startingPointInstant=tweets.get(0).getTimestamp();
+    		//endingPointInstant=tweets.get(tweets.size()-1).getTimestamp();
+    		
+    	     //timeSpan=new Timespan(startingPointInstant, endingPointInstant);	
+		
+         if(tweets.isEmpty())
+         {
+      	   System.out.println("list is empty");
+         }
+         else
+         {
+        	 for (Tweet tweet : tweets) 
+        	 {
+        		 if (tweet.getTimestamp().isAfter(timespan.getStart()) && tweet.getTimestamp().isBefore(timespan.getEnd()))
+        		 {
+                   tweetWrittenByTimespan.add(tweet); 
+                 }
+        		 else {
+					System.out.println("no tweet is present in particular time sapn");
+				}
+			 }
+         	
+         }	 
+    	return   tweetWrittenByTimespan;
+    	
+        //throw new RuntimeException("not implemented");
     }
 
     /**
@@ -60,7 +118,44 @@ public class Filter {
      *         same order as in the input list.
      */
     public static List<Tweet> containing(List<Tweet> tweets, List<String> words) {
-        throw new RuntimeException("not implemented");
+    	
+    	List<Tweet> tweetContainCertainWord = new ArrayList<>();
+    	  List<String> loweredCaseList = new ArrayList<>();
+    	  
+    	  
+          for (String lowered : words) {
+              loweredCaseList.add(lowered.toLowerCase());
+          }
+    	
+        if(tweets.isEmpty())
+        {
+     	   System.out.println("list is empty");
+        }
+        else
+        {
+       	 for (Tweet tweet : tweets) 
+       	 {
+       			 List<String> wordsfromtweet = new ArrayList<String>(Arrays.asList(tweet.getText().split(" ")));
+       		 for (String wordTweet : wordsfromtweet) {
+				
+       			if (loweredCaseList.contains(wordTweet.toLowerCase()))
+       		 {
+                  tweetContainCertainWord.add(tweet); 
+                  break;
+                }
+       		 
+			}
+       		 
+		 }
+        	
+        }	
+        
+        for (Tweet containingList : tweetContainCertainWord) {
+           System.out.println(containingList+"containing");
+        }
+        
+        return tweetContainCertainWord;
+        //throw new RuntimeException("not implemented");
     }
 
 }
