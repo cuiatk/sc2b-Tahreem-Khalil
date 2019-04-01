@@ -69,7 +69,7 @@ public class Filter {
 	public static List<Tweet> inTimespan(List<Tweet> tweets, Timespan timespan) {
     	
     	
-    	List<Tweet> tweetWrittenByTimespan = new ArrayList<>();
+    	List<Tweet> tweetWrittenInTimespan = new ArrayList<>();
     	Timespan timeSpan = null;
     	Instant startingPointInstant = null;
     	Instant endingPointInstant = null;
@@ -89,7 +89,7 @@ public class Filter {
         	 {
         		 if (tweet.getTimestamp().isAfter(timespan.getStart()) && tweet.getTimestamp().isBefore(timespan.getEnd()))
         		 {
-                   tweetWrittenByTimespan.add(tweet); 
+                   tweetWrittenInTimespan.add(tweet); 
                  }
         		 else {
 					System.out.println("no tweet is present in particular time sapn");
@@ -97,7 +97,7 @@ public class Filter {
 			 }
          	
          }	 
-    	return   tweetWrittenByTimespan;
+    	return   tweetWrittenInTimespan;
     	
         //throw new RuntimeException("not implemented");
     }
@@ -120,7 +120,7 @@ public class Filter {
     public static List<Tweet> containing(List<Tweet> tweets, List<String> words) {
     	
     	List<Tweet> tweetContainCertainWord = new ArrayList<>();
-    	  List<String> loweredCaseList = new ArrayList<>();
+        List<String> loweredCaseList = new ArrayList<>();
     	  
     	  
           for (String lowered : words) {
@@ -132,23 +132,24 @@ public class Filter {
      	   System.out.println("list is empty");
         }
         else
-        {
+       {
        	 for (Tweet tweet : tweets) 
-       	 {
+       	  {
        			 List<String> wordsfromtweet = new ArrayList<String>(Arrays.asList(tweet.getText().split(" ")));
-       		 for (String wordTweet : wordsfromtweet) {
+       		 for (String wordTweet : wordsfromtweet) 
+       		 {
 				
        			if (loweredCaseList.contains(wordTweet.toLowerCase()))
-       		 {
+       		   {
                   tweetContainCertainWord.add(tweet); 
                   break;
                 }
        		 
-			}
+			 }
        		 
-		 }
+		  }
         	
-        }	
+       }	
         
         for (Tweet containingList : tweetContainCertainWord) {
            System.out.println(containingList+"containing");
