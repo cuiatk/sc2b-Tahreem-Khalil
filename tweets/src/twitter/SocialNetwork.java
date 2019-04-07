@@ -3,9 +3,20 @@
  */
 package twitter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * SocialNetwork provides methods that operate on a social network.
@@ -41,7 +52,35 @@ public class SocialNetwork {
      *         either authors or @-mentions in the list of tweets.
      */
     public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
-        throw new RuntimeException("not implemented");
+    	
+    	Map<String, Set<String>> followersMap= new HashMap<String, Set<String>>();
+    	
+         if(tweets.isEmpty())
+     	{
+     		System.out.println("list is empty");
+     	}
+     	else
+     	{
+ 			for (Tweet tweet : tweets)
+     		{
+ 				 Set <String> mentionedAsFollowers = Extract.getMentionedUsers(Arrays.asList(tweet));
+ 				 if(!mentionedAsFollowers.isEmpty())
+ 				 {
+ 					 if (followersMap.containsKey(tweet.getAuthor())) 
+ 					 {
+ 	                    followersMap.get(tweet.getAuthor()).addAll(mentionedAsFollowers);
+ 	                 }
+ 	                else
+ 	                 {
+ 	                	followersMap.put(tweet.getAuthor(), mentionedAsFollowers);
+ 	                 }
+ 				 }
+     		}
+ 		}
+
+         return followersMap;
+         	
+       // throw new RuntimeException("not implemented");
     }
 
     /**
@@ -54,7 +93,31 @@ public class SocialNetwork {
      *         descending order of follower count.
      */
     public static List<String> influencers(Map<String, Set<String>> followsGraph) {
-        throw new RuntimeException("not implemented");
+    	 
+    	Map <String, Integer> Influence = new HashMap<>();
+    	
+    	if (!followsGraph.isEmpty()) {
+			
+    		for (Set<String> followee: followsGraph.values()) {
+            for (String name: followee) {
+            	int sizeMeasureConstant = 0;
+				if (followee.size()>=sizeMeasureConstant) {
+					Influence.put(name, followee.size());
+				}
+            }
+        }
+   	}
+      
+        
+        List<String> greatestInfluencer = Influence.entrySet()
+                                                   .stream()
+                                                   .map(Entry::getKey)
+                                                   .collect(Collectors.toList());
+         
+        Collections.reverse(greatestInfluencer);
+
+    	return greatestInfluencer;
+       // throw new RuntimeException("not implemented");
     }
 
 }
