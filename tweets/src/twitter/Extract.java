@@ -33,29 +33,27 @@ public class Extract {
      *         every tweet in the list.
      */
     public static Timespan getTimespan(List<Tweet> tweets) {
-    	Timespan timespan = null;
-    	Instant startingPointInstant = null;
-    	Instant endingPointInstant = null;
+    	
+    	Instant startingPointInstant = Instant.MAX;
+    	Instant endingPointInstant = Instant.MIN;
     	
     	if(tweets.isEmpty())
     	{
-    		try {
-				throw new Exception("the list is empty");
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    		System.out.println("no tweet is present in the list");
     	}
     	else 
     	{
-    		startingPointInstant=tweets.get(0).getTimestamp();
-    		endingPointInstant=tweets.get(tweets.size()-1).getTimestamp();
-    		
-    	     timespan=new Timespan(startingPointInstant, endingPointInstant);	
-    		  
+    		for (Tweet tweet: tweets) {
+    	            if (tweet.getTimestamp().isBefore(startingPointInstant)) {
+    	                startingPointInstant = tweet.getTimestamp();
+    	            }
+    	            if (tweet.getTimestamp().isAfter(endingPointInstant)) {
+    	                endingPointInstant = tweet.getTimestamp();
+    	            }
+			 } 
     	}
-    	System.out.println(timespan);
-    	return timespan;
+    	
+    	return new Timespan(startingPointInstant, endingPointInstant);
 		
        // throw new RuntimeException("not implemented");
     }
