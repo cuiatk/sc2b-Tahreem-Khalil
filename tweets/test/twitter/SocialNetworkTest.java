@@ -23,18 +23,25 @@ public class SocialNetworkTest {
      * 
      * testing strategy for guessFollowGraph and influencers methods.
      * 
-     * partitioning for guessFollowGraph(list(tweets)) -> followersMap
+     * partitioning for guessFollowGraph(list(tweets)) -> followsGraph
      * tweets.size(): 0,1,>1
      * author: 1,>1
      * followers of user: 0,1,>1
      * check that user doesn't follow self
      * check that author who has no followers but follow another user
      * 
+     * partitioning for influencers(followGraph) -> greatestInfluencers
+     * followGraph.size(): 0,1,>1
+     * influencers: 0,1,>1
+     * check that user is the top influencer
+     * check that user is lowest influencer
+     * check that user lies in the middle of the list
+     * 
      * See the ic03-testing exercise for examples of what a testing strategy comment looks like.
      * Make sure you have partitions.
      */
 	
-	  private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
+	    private static final Instant d1 = Instant.parse("2016-02-17T10:00:00Z");
 	    private static final Instant d2 = Instant.parse("2016-02-17T11:00:00Z");
 	    @SuppressWarnings("unused")
 	    private static final Instant d3 = Instant.parse("2016-02-17T12:00:00Z");
@@ -50,6 +57,7 @@ public class SocialNetworkTest {
 	    private static final Tweet tweet6 = new Tweet(6, "alyssa", "@bbitdiddle is it reasonable to talk about rivest "
 	    		+ "so much? when will it end!!", d4);
 	    private static final Tweet tweet7 = new Tweet(7, "theRealTahreem", "to be or not to be.", d4);
+	    private static final Tweet tweet8 = new Tweet(8, "jessiJ", "you go girl.@theRealTahreem", d4);
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
@@ -184,6 +192,8 @@ public class SocialNetworkTest {
     
     /**
      * test case: influencer list is empty
+     * followGraph 0
+     * influencers in followGraph 0
      */
     @Test
     public void testInfluencersEmpty() {
@@ -196,29 +206,104 @@ public class SocialNetworkTest {
     
     /**
      * test case: influencer list is not empty
-     * follow graph contains exactly one set
+     * followGraph 1
+     * influencers in followGraph 1
      */
     @Test
     public void testInfluencersNotEmpty() {
-    	Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet4));
+    	Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet8));
         List<String> influencers = SocialNetwork.influencers(followsGraph);
         
+        System.out.println(influencers);
         assertFalse("expected non empty list", influencers.isEmpty());
-        assertEquals("expected 2 influencers",2, influencers.size());
+        assertEquals("expected 1 influencers",1, influencers.size());
     }
     
     /**
      * test case: influencer list contain multiple set multiple influencers
-     * follow graph contains >1 sets >1 influencers
+     * followGraph >1
+     * influencers in followGraph >1
      */
     @Test
     public void testInfluencersHasMoreInfluencers() {
     	Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet4, tweet2));
         List<String> influencers = SocialNetwork.influencers(followsGraph);
         
+        System.out.println(followsGraph);
+        System.out.println(influencers);
         assertFalse("expected non empty list", influencers.isEmpty());
         assertEquals("expected 3 influencers",3, influencers.size());
         
+    }
+    
+    /**
+     * test case: users who have 0 influence(folowers)
+     * followGraph >1
+     * influencers in followGraph 0
+     */
+    @Test
+    public void testInfluencersWhoHasZeroInfluencers() {
+    	Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet1, tweet7));
+        List<String> influencers = SocialNetwork.influencers(followsGraph);
+        
+        System.out.println(followsGraph);
+        System.out.println(influencers);
+        assertEquals("expected 0 influencers",0, influencers.size());
+        
+    }
+    
+    /**
+     * test case: check that first user has the most influence(followers)
+     * followGraph >1
+     * influencers in followGraph >1
+     * top influencer = yoloGirl
+     */
+    @Test
+    public void testInfluencersWhoIsTheGreatestInfluencer() {
+    	Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet4, tweet2));
+        List<String> influencers = SocialNetwork.influencers(followsGraph);
+        
+        System.out.println(followsGraph);
+        System.out.println(influencers);
+        
+        assertEquals("expected yologirl", "yologirl", influencers.get(0));   
+        
+    }
+    
+    /**
+     * test case: check who has the lowest influence
+     * followGraph >1
+     * influencers in followGraph >1
+     * lowest influencer = rivest
+     */
+    @Test
+    public void testInfluencersWhoHasTheLowestInfluence() {
+        Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet1, tweet2, tweet4, tweet3));
+        List<String> influencers = SocialNetwork.influencers(followsGraph);
+        
+        System.out.println(influencers+" >1 ");
+        
+        assertFalse("Expected non-empty list", influencers.isEmpty());
+        assertEquals("Expected three followers", 3, influencers.size());
+        assertTrue("Expected lowest influencer to have the least number of followers", influencers.get(2).equalsIgnoreCase("rivest"));
+    }
+    
+    /**
+     * test case: check who has the lowest influence
+     * followGraph >1
+     * influencers in followGraph >1
+     * middle influencer = byeBoss
+     */
+    @Test
+    public void testInfluencersUserInTheMiddleList() {
+        Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet6, tweet2, tweet4, tweet3,tweet8));
+        List<String> influencers = SocialNetwork.influencers(followsGraph);
+        
+        System.out.println(influencers+" >1 ");
+        
+        assertFalse("Expected non-empty list", influencers.isEmpty());
+        assertEquals("Expected five followers", 5, influencers.size());
+        assertTrue("Expected middle influencer to have the least number of followers", influencers.get(2).equalsIgnoreCase("byeBoss"));
     }
     /*
      * Warning: all the tests you write here must be runnable against any
