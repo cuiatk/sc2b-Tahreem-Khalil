@@ -57,7 +57,6 @@ public class Main {
         final Timespan span = Extract.getTimespan(tweets);
         System.err.println("ranging from " + span.getStart() + " to " + span.getEnd());
         
-        System.out.println();
         
         final Set<String> mentionedUsers = Extract.getMentionedUsers(tweets);
         System.err.println("covers " + mentionedUsers.size() + " Twitter users");
@@ -67,7 +66,7 @@ public class Main {
         System.err.println("follows graph has " + followsGraph.size() + " nodes");
         
         // print the top-N influencers
-        final int count = 10;
+        final int count = 20;
         final List<String> influencers = SocialNetwork.influencers(followsGraph);
         for (String username : influencers.subList(0, Math.min(count, influencers.size()))) {
             System.out.println(username);

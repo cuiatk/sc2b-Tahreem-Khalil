@@ -3,20 +3,12 @@
  */
 package twitter;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -88,17 +80,17 @@ public class SocialNetwork {
     	 Map <String, Integer> Influence = new HashMap<>();
          for (Set<String> followee: followsGraph.values()) {
              for (String name: followee) {
-                 Influence.put(name, Influence.getOrDefault(name, 0) + 1);
+            	 Influence.put(name, Influence.getOrDefault(name, 0) + 1);
+				}   
              }
-         }
-         List<String> names = Influence.entrySet()
+         
+         List<String> greatestInfluence = Influence.entrySet()
                                        .stream()
                                        .sorted(Entry.comparingByValue())
                                        .map(Entry::getKey)
                                        .collect(Collectors.toList());
-         Collections.reverse(names);
-         return names;
+         Collections.reverse(greatestInfluence);
+         return greatestInfluence;
        // throw new RuntimeException("not implemented");
     }
-
 }
