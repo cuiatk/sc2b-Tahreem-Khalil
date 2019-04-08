@@ -75,56 +75,22 @@ public class Extract {
      */
     public static Set<String> getMentionedUsers(List<Tweet> tweets) {
        	
-    	Pattern p = Pattern.compile("\\B@[a-zA-Z0-9_-]+\\b");
-    	
-    	ArrayList<String> textList=new ArrayList<String>(); 
-    	Set<String> mention=new HashSet<String>();
-    	
-    	
-    	if(tweets.isEmpty())
-    	{
-    		System.out.println("list is empty");
-    	}
-    	else
-    	{
-			for (int i = 0; i <= tweets.size()-1; i++)
-    		{
-    			textList.add(i,((Tweet) tweets.get(i)).getText());
-    		}
-		}
-    	
-       for (String text : textList) 
-        {
-             System.out.println("text in list = " + text);
-        } 
-    	
-    	
-       if(textList.isEmpty())
-       {
-    	   System.out.println("list is empty");
-       }
-       else 
-       {
-    	   for (String text : textList)
-    	   {
-    		   Matcher matcher = p.matcher(text);
-    		   
-              while(matcher.find())
-               {
-            	   String myuser = matcher.group().substring(1);
-                   mention.add(myuser);
-                   continue;
-               }
+    	  Set<String> mentionedUsers = new HashSet<>();
+          String validMentionRegex = "\\B@[a-zA-Z0-9_-]+\\b";
+          Pattern p = Pattern.compile(validMentionRegex);
+          
+          for (Tweet tweet: tweets) {
+              String text = tweet.getText();
+              Matcher m = p.matcher(text);
               
-    	   }        
-       }
-       
-       for (String text : mention) 
-       {
-            System.out.println("mentions in Tweet = " + text);
-       } 
-   	
-         return (Set<String>) mention;
+              while (m.find()) {
+                  String userMentioned = m.group().substring(1).toLowerCase();
+                  mentionedUsers.add(userMentioned);
+              }
+          }
+          
+      
+          return mentionedUsers;
         //throw new RuntimeException("not implemented");
     }
 

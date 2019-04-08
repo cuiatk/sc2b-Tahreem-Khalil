@@ -45,7 +45,7 @@ public class Filter {
         	 {
         		 if (tweet.getAuthor().toLowerCase().equals(username.toLowerCase()))
         		 {
-                    System.out.println(tweetWrittenBy.add(tweet)+" written by"); 
+                    tweetWrittenBy.add(tweet);
                  }
 			 }
          	
