@@ -42,13 +42,14 @@ public class SocialNetworkTest {
 	    
 	    private static final Tweet tweet1 = new Tweet(1, "alyssa", "is it reasonable to talk about rivest so much?", d1);
 	    private static final Tweet tweet2 = new Tweet(2, "bbitdiddle", "@rivest talk in 30 minutes #hype", d2);
-	    private static final Tweet tweet3 = new Tweet(3, "bbitdiddle", 
+	    private static final Tweet tweet3 = new Tweet(3, "the_rock", 
 	            " Everyone say hi to the lady reading my phone over my shoulder.", d2);
 	    private static final Tweet tweet4 = new Tweet(4, "yassGirl", "to be or not to be. @byeBoss @yoloGirl", d4);
 	    private static final Tweet tweet5 = new Tweet(5, "keke_12", "hi @fake_friend and @self_absorbed_b wow your "
 	    		+ "usernames actually does match your personality.", d4);
 	    private static final Tweet tweet6 = new Tweet(6, "alyssa", "@bbitdiddle is it reasonable to talk about rivest "
 	    		+ "so much? when will it end!!", d4);
+	    private static final Tweet tweet7 = new Tweet(7, "theRealTahreem", "to be or not to be.", d4);
     
     @Test(expected=AssertionError.class)
     public void testAssertionsEnabled() {
@@ -78,8 +79,12 @@ public class SocialNetworkTest {
     @Test
     public void testGuessFollowsGraphOneAuthorMultipleFollowers() {
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet4));
-
-        assertTrue(followsGraph.get("yassGirl").containsAll(Arrays.asList("byeBoss","yoloGirl")));
+        
+        System.out.println(followsGraph);
+        Map<String, Set<String>> ourFollowGraph = new HashMap<>(); 
+        ourFollowGraph.put("yassgirl", new HashSet<String>(Arrays.asList("yologirl","byeboss")));
+        
+        assertEquals("multiple followers", ourFollowGraph, followsGraph);
     }
     
     /**
@@ -91,7 +96,13 @@ public class SocialNetworkTest {
     @Test
     public void testGuessFollowsGraphOneAuthorNoFollowers() {
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet3));
-        assertEquals("expected 0 followers",0, followsGraph.size());
+        
+        System.out.println(followsGraph);
+        Map<String, Set<String>> ourFollowGraph = new HashMap<>();
+        ourFollowGraph.put("the_rock", new HashSet<String>(Arrays.asList()));
+        
+        assertEquals("no followers", ourFollowGraph, followsGraph);
+     
     }
     
     /**
@@ -102,8 +113,14 @@ public class SocialNetworkTest {
      */
     @Test
     public void testGuessFollowsGraphMultipleAuthorNoFollowers() {
-        Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet3, tweet1));
-        assertEquals("expected 0 followers",0, followsGraph.size());
+        Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet3, tweet7));
+
+        System.out.println(followsGraph);
+        Map<String, Set<String>> ourFollowGraph = new HashMap<>(); 
+        ourFollowGraph.put("therealtahreem", new HashSet<String>(Arrays.asList()));
+        ourFollowGraph.put("the_rock", new HashSet<String>(Arrays.asList()));
+       
+        assertEquals("no followers", ourFollowGraph, followsGraph);
     }
     
     /**
@@ -117,8 +134,11 @@ public class SocialNetworkTest {
         Map<String, Set<String>> followsGraph = SocialNetwork.guessFollowsGraph(Arrays.asList(tweet4, tweet5));
         assertEquals("expected multiple followers",2, followsGraph.size());
         
-        assertTrue(followsGraph.get("yassGirl").containsAll(Arrays.asList("byeBoss","yoloGirl")));
-        assertTrue(followsGraph.get("keke_12").containsAll(Arrays.asList("fake_friend","self_absorbed_b")));
+        System.out.println(followsGraph);
+        Map<String, Set<String>> ourFollowGraph = new HashMap<>(); 
+        ourFollowGraph.put("keke_12", new HashSet<String>(Arrays.asList("fake_friend","self_absorbed_b")));
+        ourFollowGraph.put("yassgirl", new HashSet<String>(Arrays.asList("yologirl","byeboss")));
+        assertEquals("multiple followers", ourFollowGraph, followsGraph);
     }
     
     /**
