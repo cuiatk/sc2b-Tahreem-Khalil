@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -53,32 +54,22 @@ public class SocialNetwork {
      */
     public static Map<String, Set<String>> guessFollowsGraph(List<Tweet> tweets) {
     	
-    	Map<String, Set<String>> followersMap= new HashMap<String, Set<String>>();
-    	
-         if(tweets.isEmpty())
-     	{
-     		System.out.println("list is empty");
-     	}
-     	else
-     	{
- 			for (Tweet tweet : tweets)
-     		{
- 				 Set <String> mentionedAsFollowers = Extract.getMentionedUsers(Arrays.asList(tweet));
- 				 if(!mentionedAsFollowers.isEmpty())
- 				 {
- 					 if (followersMap.containsKey(tweet.getAuthor())) 
- 					 {
- 	                    followersMap.get(tweet.getAuthor()).addAll(mentionedAsFollowers);
- 	                 }
- 	                else
- 	                 {
- 	                	followersMap.put(tweet.getAuthor(), mentionedAsFollowers);
- 	                 }
- 				 }
-     		}
- 		}
-
-         return followersMap;
+       Map<String, Set<String>> followsGraph = new HashMap<>();
+        
+        Set<String> authors = tweets.stream()
+                    .map(Tweet::getAuthor)
+                    .map(String::toLowerCase)
+                    .distinct()
+                    .collect(Collectors.toSet());
+        
+        for (String author: authors) {
+            List<Tweet> tweetsByAuthor = Filter.writtenBy(tweets, author);
+            Set<String> mentionsByAuthor = Extract.getMentionedUsers(tweetsByAuthor);
+            mentionsByAuthor.remove(author);
+            followsGraph.put(author, mentionsByAuthor);
+        }
+        
+        return followsGraph;
          	
        // throw new RuntimeException("not implemented");
     }
@@ -94,29 +85,19 @@ public class SocialNetwork {
      */
     public static List<String> influencers(Map<String, Set<String>> followsGraph) {
     	 
-    	Map <String, Integer> Influence = new HashMap<>();
-    	
-    	if (!followsGraph.isEmpty()) {
-			
-    		for (Set<String> followee: followsGraph.values()) {
-            for (String name: followee) {
-            	int sizeMeasureConstant = 0;
-				if (followee.size()>=sizeMeasureConstant) {
-					Influence.put(name, followee.size());
-				}
-            }
-        }
-   	}
-      
-        
-        List<String> greatestInfluencer = Influence.entrySet()
-                                                   .stream()
-                                                   .map(Entry::getKey)
-                                                   .collect(Collectors.toList());
-         
-        Collections.reverse(greatestInfluencer);
-
-    	return greatestInfluencer;
+    	 Map <String, Integer> Influence = new HashMap<>();
+         for (Set<String> followee: followsGraph.values()) {
+             for (String name: followee) {
+                 Influence.put(name, Influence.getOrDefault(name, 0) + 1);
+             }
+         }
+         List<String> names = Influence.entrySet()
+                                       .stream()
+                                       .sorted(Entry.comparingByValue())
+                                       .map(Entry::getKey)
+                                       .collect(Collectors.toList());
+         Collections.reverse(names);
+         return names;
        // throw new RuntimeException("not implemented");
     }
 
